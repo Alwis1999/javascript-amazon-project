@@ -45,10 +45,41 @@ products.forEach((product) => {
         <img src="images/icons/checkmark.png">
         Added
       </div>
+
+      <button class="add-to-cart-button button-primary js-add-to-cart" data-product-name="${
+        product.name
+      }">
+        Add to Cart
+      </button>
+
     </div>
   `;
 });
 
-console.log(productsHTML);
-
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
+
+document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+  button.addEventListener("click", () => {
+    const productName = button.dataset.productName;
+    console.log(productName);
+
+    let machingItem;
+    index = 0;
+    for (; index < cart.length; index++) {
+      if (cart[index].name === productName) {
+        console.log("run here");
+        cart[index].quantity++;
+        machingItem = true;
+        break;
+      }
+    }
+
+    if (!machingItem) {
+      cart.push({
+        name: button.dataset.productName,
+        quantity: 1,
+      });
+    }
+    console.log(cart);
+  });
+});
