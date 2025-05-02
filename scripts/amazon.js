@@ -1,4 +1,5 @@
 let productsHTML = "";
+let cartQuantity = 0;
 
 products.forEach((product) => {
   productsHTML += `
@@ -25,7 +26,7 @@ products.forEach((product) => {
       </div>
 
       <div class="product-quantity-container">
-        <select>
+        <select class="js-quantity-selector-${product.id}">
           <option selected value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -41,7 +42,7 @@ products.forEach((product) => {
 
       <div class="product-spacer"></div>
 
-      <div class="added-to-cart">
+      <div class="added-to-cart js-added-to-cart-${product.id}">
         <img src="images/icons/checkmark.png">
         Added
       </div>
@@ -61,14 +62,15 @@ document.querySelector(".js-products-grid").innerHTML = productsHTML;
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId;
-    console.log(productId);
 
     let machingItem;
-    index = 0;
-    for (; index < cart.length; index++) {
+    const getQuanity = Number(
+      document.querySelector(`.js-quantity-selector-${productId}`).value
+    );
+
+    for (index = 0; index < cart.length; index++) {
       if (cart[index].id === productId) {
-        console.log("run here");
-        cart[index].quantity++;
+        cart[index].quantity += getQuanity;
         machingItem = true;
         break;
       }
@@ -77,9 +79,28 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
     if (!machingItem) {
       cart.push({
         id: button.dataset.productId,
-        quantity: 1,
+        quantity: getQuanity,
       });
     }
-    console.log(cart);
+
+    cartQuantity = 0;
+    cart.forEach((item) => {
+      cartQuantity += item.quantity;
+    });
+
+    document.querySelector(".cart-quantity").innerHTML = cartQuantity;
+
+    let productCartTimeOuts = {};
+
+    const addShow = document.querySelector(`.js-added-to-cart-${productId}`);
+    addShow.classList.add("visible");
+
+    if (productCartTimeOuts[productId]) {
+      clearTimeout(productCartTimeOuts[productId]);
+    }
+    productCartTimeOuts[productId] = setTimeout(() => {
+      addShow.classList.remove("visible");
+      delete productCartTimeOuts[productId];
+    }, 2000);
   });
 });
