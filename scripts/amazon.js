@@ -1,5 +1,3 @@
-import { cart } from "../data/cart.js";
-
 let productsHTML = "";
 let cartQuantity = 0;
 
