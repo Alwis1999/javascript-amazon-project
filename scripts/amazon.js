@@ -1,8 +1,7 @@
-import { cart } from "../data/cart.js";
-import {products} from "../data/products.js"
+import { cart, addToCart } from "../data/cart.js";
+import { products } from "../data/products.js";
 
 let productsHTML = "";
-let cartQuantity = 0;
 
 products.forEach((product) => {
   productsHTML += `
@@ -62,48 +61,33 @@ products.forEach((product) => {
 
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
+function addCartQuantity(productId) {
+  let cartQuantity = 0;
+  cart.forEach((item) => {
+    cartQuantity += item.quantity;
+  });
+
+  document.querySelector(".cart-quantity").innerHTML = cartQuantity;
+
+  let productCartTimeOuts = {};
+
+  const addShow = document.querySelector(`.js-added-to-cart-${productId}`);
+  addShow.classList.add("visible");
+
+  if (productCartTimeOuts[productId]) {
+    clearTimeout(productCartTimeOuts[productId]);
+  }
+  productCartTimeOuts[productId] = setTimeout(() => {
+    addShow.classList.remove("visible");
+    delete productCartTimeOuts[productId];
+  }, 2000);
+}
+
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId;
 
-    let machingItem;
-    const getQuanity = Number(
-      document.querySelector(`.js-quantity-selector-${productId}`).value
-    );
-
-    for (index = 0; index < cart.length; index++) {
-      if (cart[index].id === productId) {
-        cart[index].quantity += getQuanity;
-        machingItem = true;
-        break;
-      }
-    }
-
-    if (!machingItem) {
-      cart.push({
-        id: button.dataset.productId,
-        quantity: getQuanity,
-      });
-    }
-
-    cartQuantity = 0;
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;
-    });
-
-    document.querySelector(".cart-quantity").innerHTML = cartQuantity;
-
-    let productCartTimeOuts = {};
-
-    const addShow = document.querySelector(`.js-added-to-cart-${productId}`);
-    addShow.classList.add("visible");
-
-    if (productCartTimeOuts[productId]) {
-      clearTimeout(productCartTimeOuts[productId]);
-    }
-    productCartTimeOuts[productId] = setTimeout(() => {
-      addShow.classList.remove("visible");
-      delete productCartTimeOuts[productId];
-    }, 2000);
+    addToCart(productId);
+    addCartQuantity(productId);
   });
 });
