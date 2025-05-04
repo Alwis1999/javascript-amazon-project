@@ -45,3 +45,11 @@ export function deleteFromCart(itemId) {
   }
   return false;
 }
+
+export function totalCartQuantity() {
+  let total = 0;
+  cart.forEach((cartItem) => {
+    total += cartItem.quantity;
+  });
+  return total;
+}

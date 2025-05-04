@@ -1,6 +1,9 @@
-import { cart, deleteFromCart } from "../data/cart.js";
+import { cart, deleteFromCart, totalCartQuantity } from "../data/cart.js";
 import { getProductFromId } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
+
+
+document.querySelector('.js-return-to-home-link').innerHTML= totalCartQuantity();
 
 function cartRender() {
   const cartHTML = document.querySelector(".js-order-summary");
@@ -97,6 +100,7 @@ function deleteLink() {
       const itemId = link.dataset.productId;
       deleteFromCart(itemId);
       document.querySelector(`.js-cart-item-${itemId}`).remove();
+      document.querySelector('.js-return-to-home-link').innerHTML= totalCartQuantity();
     });
   });
 }
