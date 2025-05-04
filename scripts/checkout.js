@@ -56,7 +56,7 @@ cart.forEach((cartItem) => {
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"
-                name="delivery-option-1">
+                name="delivery-option-${cartItem.id}">
               <div>
                 <div class="delivery-option-date">
                   Wednesday, June 15
@@ -69,7 +69,7 @@ cart.forEach((cartItem) => {
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"
-                name="delivery-option-1">
+                name="delivery-option-${cartItem.id}">
               <div>
                 <div class="delivery-option-date">
                   Monday, June 13
@@ -83,4 +83,13 @@ cart.forEach((cartItem) => {
         </div>
      </div>
     `;
+});
+
+const testVariable = document.querySelectorAll(".js-delete-link");
+console.log(testVariable.length);
+
+testVariable.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    console.log("run here");
+  });
 });

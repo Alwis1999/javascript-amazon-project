@@ -90,6 +90,5 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
 
     addToCart(productId);
     addCartQuantity(productId);
-    console.log(JSON.stringify(cart));
   });
 });
