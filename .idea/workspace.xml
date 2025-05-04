@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dcd19733-18d9-4d14-8d6d-ba026fe5d106" name="Changes" comment="Fixed price formatting and radio selectors">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/cart.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/checkout.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +75,7 @@
       <option name="presentableId" value="Default" />
       <updated>1746348260462</updated>
       <workItem from="1746348261536" duration="6058000" />
-      <workItem from="1746364319648" duration="10302000" />
+      <workItem from="1746364319648" duration="12121000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed price formatting and radio selectors">
       <option name="closed" value="true" />
