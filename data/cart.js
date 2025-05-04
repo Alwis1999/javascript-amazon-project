@@ -25,3 +25,13 @@ export function addToCart(productId) {
     });
   }
 }
+
+export function deleteFromCart(itemId) {
+  for (let index=0; index < cart.length; index++) {
+    if (cart[index].id === itemId) {
+      cart.splice(index, 1);
+      return true;
+    }
+  }
+  return false;
+}
