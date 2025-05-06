@@ -53,3 +53,13 @@ export function totalCartQuantity() {
   });
   return total;
 }
+
+export function updateCartQuantity(productId, value) {
+  for (let index = 0; index < cart.length; index++) {
+    if (cart[index].id === productId) {
+      cart[index].quantity = value;
+      break;
+    }
+  }
+  saveToStorage();
+}
