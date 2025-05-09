@@ -13,7 +13,7 @@ import { deliveryOptions } from "../data/deliveryOptions.js";
 document.querySelector(".js-return-to-home-link").innerHTML =
   totalCartQuantity();
 
-function cartRender() {
+function renderOrderSummary() {
   const cartHTML = document.querySelector(".js-order-summary");
   cartHTML.innerHTML = "";
 
@@ -81,22 +81,21 @@ function cartRender() {
     `;
     deleteLink();
   });
-}
 
-function deliveryOptionsHTML(cartItem) {
-  let html = "";
+  function deliveryOptionsHTML(cartItem) {
+    let html = "";
 
-  deliveryOptions.forEach((deliveryOption) => {
-    const deliveryDate = dayjs().add(deliveryOption.deliveryDate, "days");
-    const dateString = deliveryDate.format("dddd, MMMM D");
-    const deliveryPrice =
-      deliveryOption.priceCents === 0
-        ? "FREE"
-        : `${formatCurrency(deliveryOption.priceCents)}`;
-    const isChecked =
-      cartItem.deliveryOption === deliveryOption.id ? "checked" : "";
+    deliveryOptions.forEach((deliveryOption) => {
+      const deliveryDate = dayjs().add(deliveryOption.deliveryDate, "days");
+      const dateString = deliveryDate.format("dddd, MMMM D");
+      const deliveryPrice =
+        deliveryOption.priceCents === 0
+          ? "FREE"
+          : `${formatCurrency(deliveryOption.priceCents)}`;
+      const isChecked =
+        cartItem.deliveryOption === deliveryOption.id ? "checked" : "";
 
-    html += `
+      html += `
           <div class="delivery-option js-delivery-option"
           data-product-id="${cartItem.id}" data-delivery-option-id="${deliveryOption.id}">
             <input type="radio" ${isChecked}
@@ -112,69 +111,73 @@ function deliveryOptionsHTML(cartItem) {
             </div>
           </div>
         `;
-  });
-  return html;
-}
+    });
+    return html;
+  }
 
-cartRender();
+  function deleteLink() {
+    document.querySelectorAll(".js-delete-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        const itemId = link.dataset.productId;
+        deleteFromCart(itemId);
+        document.querySelector(`.js-cart-item-${itemId}`).remove();
+        document.querySelector(".js-return-to-home-link").innerHTML =
+          totalCartQuantity();
+      });
+    });
+  }
 
-function deleteLink() {
-  document.querySelectorAll(".js-delete-link").forEach((link) => {
+  document.querySelectorAll(".js-update-link").forEach((link) => {
     link.addEventListener("click", () => {
-      const itemId = link.dataset.productId;
+      const cartId = link.dataset.productId;
+      const container = document.querySelector(`.js-cart-item-${cartId}`);
+      container.classList.add("is-editing-quantity");
+    });
+  });
+
+  function updateItemQuantity(cartItemId, updatedValue) {
+    if (updatedValue > 0) {
+      const container = document.querySelector(`.js-cart-item-${cartItemId}`);
+      updateCartQuantity(cartItemId, updatedValue);
+      container.classList.remove("is-editing-quantity");
+      document.querySelector(
+        `.js-cart-item-${cartItemId} .quantity-label`
+      ).innerHTML = updatedValue;
+    } else {
       deleteFromCart(itemId);
       document.querySelector(`.js-cart-item-${itemId}`).remove();
-      document.querySelector(".js-return-to-home-link").innerHTML =
-        totalCartQuantity();
+    }
+    document.querySelector(".js-return-to-home-link").innerHTML =
+      totalCartQuantity();
+  }
+
+  document.querySelectorAll(".js-save-link").forEach((save) => {
+    save.addEventListener("click", () => {
+      const cartItemId = save.dataset.productId;
+      const updatedValue = Number(
+        document.getElementById(`${cartItemId}`).value
+      );
+      updateItemQuantity(cartItemId, updatedValue);
+    });
+  });
+
+  document.querySelectorAll(".quantity-input").forEach((link) => {
+    link.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        const updatedValue = Number(link.value);
+        const cartItemId = link.dataset.productId;
+        updateItemQuantity(cartItemId, updatedValue);
+      }
+    });
+  });
+
+  document.querySelectorAll(".js-delivery-option").forEach((element) => {
+    element.addEventListener("click", () => {
+      const { productId, deliveryOptionId } = element.dataset;
+      updateDeliveryOption(productId, deliveryOptionId);
+      renderOrderSummary();
     });
   });
 }
 
-document.querySelectorAll(".js-update-link").forEach((link) => {
-  link.addEventListener("click", () => {
-    const cartId = link.dataset.productId;
-    const container = document.querySelector(`.js-cart-item-${cartId}`);
-    container.classList.add("is-editing-quantity");
-  });
-});
-
-function updateItemQuantity(cartItemId, updatedValue) {
-  if (updatedValue > 0) {
-    const container = document.querySelector(`.js-cart-item-${cartItemId}`);
-    updateCartQuantity(cartItemId, updatedValue);
-    container.classList.remove("is-editing-quantity");
-    document.querySelector(
-      `.js-cart-item-${cartItemId} .quantity-label`
-    ).innerHTML = updatedValue;
-  } else {
-    deleteFromCart(itemId);
-    document.querySelector(`.js-cart-item-${itemId}`).remove();
-  }
-  document.querySelector(".js-return-to-home-link").innerHTML =
-    totalCartQuantity();
-}
-
-document.querySelectorAll(".js-save-link").forEach((save) => {
-  save.addEventListener("click", () => {
-    const cartItemId = save.dataset.productId;
-    const updatedValue = Number(document.getElementById(`${cartItemId}`).value);
-    updateItemQuantity(cartItemId, updatedValue);
-  });
-});
-
-document.querySelectorAll(".quantity-input").forEach((link) => {
-  link.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      const updatedValue = Number(link.value);
-      const cartItemId = link.dataset.productId;
-      updateItemQuantity(cartItemId, updatedValue);
-    }
-  });
-});
-
-document.querySelectorAll(".js-delivery-option").forEach((element) => {
-  element.addEventListener("click", () => {
-    const { productId, deliveryOptionId } = element.dataset;
-    updateDeliveryOption(productId, deliveryOptionId);
-  });
-});
+renderOrderSummary();
