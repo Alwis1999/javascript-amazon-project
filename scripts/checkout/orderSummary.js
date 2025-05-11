@@ -8,7 +8,10 @@ import {
 import { getProductFromId } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
-import { deliveryOptions } from "../../data/deliveryOptions.js";
+import {
+  deliveryOptions,
+  getDeliveryOption,
+} from "../../data/deliveryOptions.js";
 
 document.querySelector(".js-return-to-home-link").innerHTML =
   totalCartQuantity();
@@ -19,17 +22,11 @@ export function renderOrderSummary() {
 
   cart.forEach((cartItem) => {
     let product = getProductFromId(cartItem.id);
-    let deliveryOption;
+    const deliveryOption = getDeliveryOption(cartItem.deliveryOption);
 
-    deliveryOptions.forEach((option) => {
-      if (cartItem.deliveryOption === option.id) {
-        deliveryOption = option;
-      }
-    });
-
-    const today = dayjs();
-    const dD = today.add(deliveryOption.deliveryDate, "days");
-    const deliveryDate = dD.format("dddd, MMMM D");
+    const deliveryDate = dayjs()
+      .add(deliveryOption.deliveryDate, "days")
+      .format("dddd, MMMM D");
 
     cartHTML.innerHTML += `
     <div class="cart-item-container js-cart-item-${cartItem.id}">

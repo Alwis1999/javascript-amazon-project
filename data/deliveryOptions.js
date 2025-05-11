@@ -15,3 +15,12 @@ export const deliveryOptions = [
     priceCents: 999,
   },
 ];
+
+export function getDeliveryOption(deliveryOptionId) {
+  for (let i = 0; i < deliveryOptions.length; i++) {
+    if (deliveryOptions[i].id === deliveryOptionId) {
+      return deliveryOptions[i];
+    }
+  }
+  return deliveryOptions[0];
+}
