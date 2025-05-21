@@ -19,7 +19,6 @@ describe("test suite: addToCart", () => {
     spyOn(localStorage, "getItem").and.callFake(() => {
       return JSON.stringify([]);
     });
-    console.log(localStorage.getItem("cart"));
 
     loadFromStorage();
 
